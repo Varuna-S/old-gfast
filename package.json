@@ -1,12 +1,17 @@
 {
   "scripts": {
-    "start": "fastify start app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "config": "^3.3.6",
     "fastify": "^3.14.2",
+    "fastify-autoload": "^3.7.1",
     "fastify-cli": "^2.9.1",
+    "fastify-mongodb": "^2.0.1",
+    "fastify-mongoose": "^0.3.0",
     "fastify-plugin": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.4"
   },
   "devDependencies": {

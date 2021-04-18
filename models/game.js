@@ -32,6 +32,12 @@ const gameSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 100
     },
+    platform: {
+        type: String,
+        required:  [true, 'platform name is required'],
+        minlength: 1,
+        maxlength: 175
+    },
     releaseDate: {
         type: Date,
         min: '1970-01-01',
@@ -39,6 +45,7 @@ const gameSchema = new mongoose.Schema({
         validate:{
             validator: function(rd){
                 dateNow  = new Date();
+                //validates the date, if its within current date
                 return (rd.getYear() > dateNow.getYear() || rd.getMonth() > dateNow.getMonth() || rd.getDate() > dateNow.getDate())? 0 : 1;
             },
             message:'Invalid date'
@@ -51,5 +58,5 @@ const Game = mongoose.model('Game', gameSchema);
 
 
 
-
+exports.gameSchema = gameSchema;
 exports.Game = Game;
