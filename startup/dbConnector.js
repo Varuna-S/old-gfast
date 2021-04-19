@@ -5,10 +5,6 @@ const mongoose = require('mongoose');
 //db connector plugin
 async function dbConnector (fastify, options) {
     try{
-        // fastify.register(require('fastify-mongoose'), {
-        //     uri: config.get('db')
-        //   });
-        //   fastify.log.info(`Connected to ${config.get('db')}`);
         const db = config.get('db');
         mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex :true})
             .then(() => fastify.log.info(`Connected to ${db}`));

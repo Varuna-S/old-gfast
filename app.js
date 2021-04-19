@@ -1,5 +1,5 @@
 const fastify = require('fastify');
-const { info } = require('verror');
+
 
 //instantiating app
 const app = fastify({ 
@@ -12,7 +12,8 @@ const app = fastify({
 app.register(require('./startup/dbConnector'));
 app.register(require('./routes/homePage'));
 app.register(require('./routes/games'), { prefix: '/api/games'});
-// app.register(require('./routes/users'), { prefix: '/api/users'});
+app.register(require('./routes/users'), { prefix: '/api/users'});
+app.register(require('./routes/authn'), { prefix: '/api/authn'});
 
 
 
