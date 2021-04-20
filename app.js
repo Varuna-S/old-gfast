@@ -1,29 +1,28 @@
-const fastify = require('fastify');
+const helmet = require('fastify-helmet');
 
-
-//instantiating app
-const app = fastify({ 
-  logger:{
-    level: 'info'
-  }
+const fastify = require('fastify')({ 
+  logger: true,
 });
 
-//registering the routes along with their respective url prefix
-app.register(require('./startup/dbConnector'));
-app.register(require('./routes/homePage'));
-app.register(require('./routes/games'), { prefix: '/api/games'});
-app.register(require('./routes/users'), { prefix: '/api/users'});
-app.register(require('./routes/authn'), { prefix: '/api/authn'});
+
+
+//registering the plugin along with their respective url prefix
+fastify.register(helmet);
+fastify.register(require('./plugins/startup/dbConnector'));
+fastify.register(require('./plugins/routes/homePage'));
+fastify.register(require('./plugins/routes/games'), { prefix: '/api/games'});
+fastify.register(require('./plugins/routes/users'), { prefix: '/api/users'});
+fastify.register(require('./plugins/routes/authn'), { prefix: '/api/authn'});
 
 
 
 const port = process.env.PORT || 3000;
-const server = app.listen(port, function (err, address) {
+const server = fastify.listen(port, function (err, address) {
     if (err) {
-      app.log.error(err);
+      fastify.log.error(err);
       process.exit(1);
     }
-    app.log.info(`server listening on ${address}`);
+    fastify.log.info(`server listening on ${address}`);
 });
 
 module.exports = server;

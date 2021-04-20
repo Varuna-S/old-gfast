@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const moment = require('moment');
 //mongoose schema for game
 const gameSchema = new mongoose.Schema({
     name: {
@@ -44,11 +44,11 @@ const gameSchema = new mongoose.Schema({
         required:  [true, 'release date is required'],
         validate:{
             validator: function(rd){
-                dateNow  = new Date();
+                dateNow  = Date.now();
                 //validates the date, if its within current date
-                return (rd.getYear() > dateNow.getYear() || rd.getMonth() > dateNow.getMonth() || rd.getDate() > dateNow.getDate())? 0 : 1;
+                return  (moment(rd, 'YYYY-MM-DD').isSameOrBefore(dateNow));
             },
-            message:'Invalid date'
+            message:'Invalid date - release date should be within current date'
         }
     }
 });

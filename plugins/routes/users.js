@@ -1,4 +1,4 @@
-const {User} = require('../models/user');
+const {User} = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
@@ -18,11 +18,11 @@ async function routes(fastify, options){
       reply.send(users);
     });
 
-    // sign up 
+    //sign up 
     fastify.post('/', async (request, reply) => {
       let user = await User.findOne({email: request.body.email});
     if(user)
-        return response.status(400).send("User already registered with this email");
+        return reply.status(400).send("User already registered with this email");
     user = new User(_.pick(request.body, ['name','email','password']));
     const salt = await bcrypt.genSalt(10);
     user.password= await bcrypt.hash(user.password, salt);
