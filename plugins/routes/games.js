@@ -2,11 +2,18 @@ const {Game} = require('../../models/game');
 const _ = require('lodash');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
-
-const {getOptions, postOptions, putOptions, deleteOptions} = require('../../routeOptions/games');
+const {getOptions, postOptions, putOptions, deleteOptions, patchOptions} = require('../../routeOptions/games');
 
 
 async function routes(fastify, options){
+
+    //setting the authentication(authn) and authorization(authz) decorators for the route options
+    getOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+    postOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+    putOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+    patchOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+    deleteOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+
     //GET
     fastify.get('/', async (request, reply) => {
         const games = await Game
@@ -15,7 +22,7 @@ async function routes(fastify, options){
         reply.send(games);
       });
     
-    fastify.get('/:id', getOptions,async (request, reply) => {
+    fastify.get('/:id', getOptions, async (request, reply) => {
         const game = await Game
             .findOne({ _id: request.params.id})
             .sort({name:1});
@@ -56,7 +63,7 @@ async function routes(fastify, options){
     });
 
     //PATCH
-    fastify.patch('/:id', async (request, reply) => {
+    fastify.patch('/:id', patchOptions,async (request, reply) => {
         let game = await Game.findOne({ _id: request.params.id});
         if(!game)
             return reply.status(404).send(`Could not find game with id: ${request.params.id}`);

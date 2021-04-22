@@ -1,16 +1,22 @@
 const {User} = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
+const {getMeOptions, getOptions} = require('../../routeOptions/users');
 
 async function routes(fastify, options){
 
+    //setting the authentication(authn) and authorization(authz) decorators for the route options
+    getMeOptions.preHandler = fastify.auth([fastify.authn],{relation: 'and'});
+    getOptions.preHandler = fastify.auth([fastify.authn, fastify.authz],{relation: 'and'});
+
     //user details of the current logged in user
-    fastify.get('/me', async (request, reply) => {
+    fastify.get('/me', getMeOptions, async (request, reply) => {
         const user = await User.findById(request.user._id).select('-password');
         reply.send(user);
       });
     
-    fastify.get('/', async (request, reply) => {
+    //get all users by admin only
+    fastify.get('/', getOptions, async (request, reply) => {
       const users = await User
         .find()
         .sort({name: 1, isAdmin:1})

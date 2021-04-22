@@ -17,6 +17,10 @@ const requestBodySchema = {
     required: ['name', 'genre', 'developerName', 'publisherName', 'gameEngine', 'platform', 'releaseDate'],
     properties: gameInputProperties
 }
+const patchRequestBodySchema ={
+    type: 'object',
+    properties: gameInputProperties
+}
 
 //Joi schema for validating id in params 
 const paramsSchema = {
@@ -36,13 +40,17 @@ const  putRequestSchema ={
     body: requestBodySchema,
     params : Joi.object().keys(paramsSchema).required()
 }
+const  patchRequestSchema ={
+    body: patchRequestBodySchema,
+    params : Joi.object().keys(paramsSchema).required()
+}
 const  deleteRequestSchema ={
     params : Joi.object().keys(paramsSchema).required()
 }
 
 
-
+exports.getRequestSchema = getRequestSchema;
 exports.postRequestSchema = postRequestSchema;
 exports.putRequestSchema = putRequestSchema;
-exports.getRequestSchema = getRequestSchema;
+exports.patchRequestSchema = patchRequestSchema;
 exports.deleteRequestSchema = deleteRequestSchema;

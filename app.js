@@ -1,5 +1,6 @@
 const helmet = require('fastify-helmet');
-
+const fastifyAuth =require('fastify-auth');
+const decorators = require('./decorators/authDecorators')
 const fastify = require('fastify')({ 
   logger: true,
 });
@@ -8,6 +9,8 @@ const fastify = require('fastify')({
 
 //registering the plugin along with their respective url prefix
 fastify.register(helmet);
+fastify.register(decorators);
+fastify.register(fastifyAuth);
 fastify.register(require('./plugins/startup/dbConnector'));
 fastify.register(require('./plugins/routes/homePage'));
 fastify.register(require('./plugins/routes/games'), { prefix: '/api/games'});

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         maxlength: 1024, //hashed passwords length is greater than the actual password
     },
-    isAdmin: Boolean
+    isAdmin: {type:Boolean, default: false}
 });
 
 //instance method on user object to generate authentication token
