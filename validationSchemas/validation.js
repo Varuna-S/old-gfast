@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'));
 Joi.objectId = require('joi-objectid')(Joi);
 
 gameInputProperties = {
@@ -17,40 +17,156 @@ const requestBodySchema = {
     required: ['name', 'genre', 'developerName', 'publisherName', 'gameEngine', 'platform', 'releaseDate'],
     properties: gameInputProperties
 }
-const patchRequestBodySchema ={
+
+const signupBodySchema = {
     type: 'object',
-    properties: gameInputProperties
+    properties: {
+        name:{type:'string', minLength:3, maxLength:50},
+        email:{type:'string', format: 'email',minLength:6, maxLength:255},
+        password:{type:'string', minLength:8, maxLength:255}
+    }
 }
 
-//Joi schema for validating id in params 
+//Joi schema for validating id in params along with body as well
 const paramsSchema = {
         id: Joi.objectId().required()  
 }
+const requestBodyJoiSchema = {
+    name: Joi.string().min(1).max(150).required(),
+    genre: Joi.string().min(1).max(150).required(),
+    developerName: Joi.string().min(1).max(150).required(),
+    publisherName: Joi.string().min(1).max(150).required(),
+    gameEngine: Joi.string().min(1).max(100).required(),
+    platform: Joi.string().min(1).max(175).required(),
+    releaseDate: Joi.date().format('YYYY-MM-DD').utc().max('now').required()
+}
+const patchRequestBodyJoiSchema = {
+    name: Joi.string().min(1).max(150),
+    genre: Joi.string().min(1).max(150),
+    developerName: Joi.string().min(1).max(150),
+    publisherName: Joi.string().min(1).max(150),
+    gameEngine: Joi.string().min(1).max(100),
+    platform: Joi.string().min(1).max(175),
+    releaseDate: Joi.date().format('YYYY-MM-DD').utc().max('now')
+}
+
+//input validation schema for the routes and their serialization output schema
 const getRequestSchema = {
-    params: Joi.object().keys(paramsSchema).required()
+    params: Joi.object().keys(paramsSchema).required(),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                _id: { type:'string'},
+                ...gameInputProperties,
+                __v:{type: 'number'}
+            }
+        } 
+    }
 }
-
-
-
-//input validation schema for the routes
 const postRequestSchema = {
-    body: requestBodySchema
-}
-const  putRequestSchema ={
     body: requestBodySchema,
-    params : Joi.object().keys(paramsSchema).required()
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                _id: { type:'string'},
+                ...gameInputProperties,
+                __v:{type: 'number'}
+            }
+        } 
+    }
+}
+const  putRequestSchema = {
+    body: Joi.object().keys(requestBodyJoiSchema).required(),
+    params : Joi.object().keys(paramsSchema).required(),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                _id: { type:'string'},
+                ...gameInputProperties,
+                __v:{type: 'number'}
+            }
+        } 
+    }
 }
 const  patchRequestSchema ={
-    body: patchRequestBodySchema,
-    params : Joi.object().keys(paramsSchema).required()
+    body: Joi.object().keys(patchRequestBodyJoiSchema).required(),
+    params : Joi.object().keys(paramsSchema).required(),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                _id: { type:'string'},
+                ...gameInputProperties,
+                __v:{type: 'number'}
+            }
+        } 
+    }
 }
 const  deleteRequestSchema ={
-    params : Joi.object().keys(paramsSchema).required()
+    params : Joi.object().keys(paramsSchema).required(),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                _id: { type:'string'},
+                ...gameInputProperties,
+                __v:{type: 'number'}
+            }
+        } 
+    }
 }
-
+const signupSchema = {
+    body: signupBodySchema,
+    response: {
+        200: {
+            type: 'object',
+            properties: { 
+                _id: { type: 'string'},
+                name:{ type: 'string'},
+                email: { type: 'string'}
+            }
+        }
+    }
+}
+const getUsersSchema = {
+    response: {
+        200: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties:{
+                    _id: { type: 'string'},
+                    name:{ type: 'string'},
+                    email: { type: 'string'},
+                    isAdmin:{type: 'boolean'}
+                }
+            } 
+        }
+    }
+}
+const getMeSchema = {
+    response: {
+        200: {
+            type: 'object',
+            properties:{
+                _id: { type: 'string'},
+                name:{ type: 'string'},
+                email: { type: 'string'},
+                isAdmin:{type: 'boolean'}
+            }
+        } 
+    }
+}
 
 exports.getRequestSchema = getRequestSchema;
 exports.postRequestSchema = postRequestSchema;
 exports.putRequestSchema = putRequestSchema;
 exports.patchRequestSchema = patchRequestSchema;
 exports.deleteRequestSchema = deleteRequestSchema;
+
+exports.signupSchema = signupSchema;
+exports.getUsersSchema = getUsersSchema;
+exports.getMeSchema = getMeSchema;

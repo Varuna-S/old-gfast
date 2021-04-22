@@ -7,12 +7,12 @@ const {getOptions, postOptions, putOptions, deleteOptions, patchOptions} = requi
 
 async function routes(fastify, options){
 
-    //setting the authentication(authn) and authorization(authz) decorators for the route options
-    getOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
-    postOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
-    putOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
-    patchOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
-    deleteOptions.preHandler = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'});
+    //setting the authentication(authn) and authorization(authz) decorators for the selected route options
+    let authnAndAuthz = fastify.auth([fastify.authn, fastify.authz], {relation: 'and'}); 
+    postOptions.preHandler = authnAndAuthz;
+    putOptions.preHandler = authnAndAuthz;
+    patchOptions.preHandler = authnAndAuthz;
+    deleteOptions.preHandler = authnAndAuthz;
 
     //GET
     fastify.get('/', async (request, reply) => {
@@ -26,6 +26,8 @@ async function routes(fastify, options){
         const game = await Game
             .findOne({ _id: request.params.id})
             .sort({name:1});
+        if(!game)
+            return reply.status(404).send(`Could not find game with id: ${request.params.id}`);
         reply.send(game);
     });
 

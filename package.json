@@ -4,6 +4,7 @@
     "dev": "nodemon app.js"
   },
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "ajv": "^6.12.6",
     "ajv-formats": "^2.0.2",
     "bcryptjs": "^2.4.3",

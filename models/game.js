@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
+
 //mongoose schema for game
 const gameSchema = new mongoose.Schema({
     name: {
@@ -53,10 +54,11 @@ const gameSchema = new mongoose.Schema({
     }
 });
 
+//indexing games collection
+gameSchema.index({'_id':1,'releaseDate': -1});
+
 // model from game schema
 const Game = mongoose.model('Game', gameSchema);
-
-
 
 exports.gameSchema = gameSchema;
 exports.Game = Game;

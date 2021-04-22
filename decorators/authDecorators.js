@@ -33,6 +33,7 @@ module.exports = fastifyPlugin( function (fastify, options, next) {
     const method = request.method;
     let result;
     let response;
+    //options for the policy eval http request
     const options = {
       url:'http://localhost:8181/v1/data/policy',
       data: {
@@ -45,22 +46,22 @@ module.exports = fastifyPlugin( function (fastify, options, next) {
       headers:{
           'Content-Type': 'application/json'
       }
-  }
-    
-  async function eval(){
-      try {
-        response = await tiny.post(options);          
-      }
-      catch(err){
-          done(new Error("Cannot connect to policy agent"));
-      }
-      if(response.body.result === undefined)
-        done(new Error("No response from policy agent, policy might not have been loaded"));
-      result = response.body.result.allow;
-  }
-  await eval();
-  if(!result)
-    return reply.status(403).send({message:"Unauthorized Request - Forbidden"});
+    }
+    //function to request the OPA api endpoints  
+    async function eval(){
+        try {
+          response = await tiny.post(options);          
+        }
+        catch(err){
+            done(new Error("Cannot connect to policy agent"));
+        }
+        if(response.body.result === undefined)
+          done(new Error("No response from policy agent, policy might not have been loaded"));
+        result = response.body.result.allow;
+    }
+    await eval();
+    if(!result)
+      return reply.status(403).send({message:"Unauthorized Request - Forbidden"});
   });
   next();
 });

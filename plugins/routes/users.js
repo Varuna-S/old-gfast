@@ -1,7 +1,7 @@
 const {User} = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
-const {getMeOptions, getOptions} = require('../../routeOptions/users');
+const {getMeOptions, getOptions, postOptions} = require('../../routeOptions/users');
 
 async function routes(fastify, options){
 
@@ -11,7 +11,7 @@ async function routes(fastify, options){
 
     //user details of the current logged in user
     fastify.get('/me', getMeOptions, async (request, reply) => {
-        const user = await User.findById(request.user._id).select('-password');
+        let user = await User.findOne({_id: request.user._id}).select('-password -__v');
         reply.send(user);
       });
     
@@ -20,12 +20,12 @@ async function routes(fastify, options){
       const users = await User
         .find()
         .sort({name: 1, isAdmin:1})
-        .select('-password');
+        .select('-password -__v');
       reply.send(users);
     });
 
     //sign up 
-    fastify.post('/', async (request, reply) => {
+    fastify.post('/', postOptions, async (request, reply) => {
       let user = await User.findOne({email: request.body.email});
     if(user)
         return reply.status(400).send("User already registered with this email");

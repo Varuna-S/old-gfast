@@ -8,8 +8,13 @@ const getOptions = {
     },
     response: {
         200: {
-            type: 'array',
-            items: {type: 'object'}
+            type: 'object',
+            properties: {
+                _id: { type: 'string'},
+                isAdmin: { type: 'boolean'},
+                name:{ type: 'string'},
+                email: { type: 'string'}
+            }
         }
     }
 }
@@ -22,13 +27,13 @@ const putOptions = {
     schema: putRequestSchema,
     validatorCompiler: ({schema, method, url, httpPart }) => {
         return data => schema.validate(data)
-    },
+    }
 }
 const patchOptions = {
     schema: patchRequestSchema,
     validatorCompiler: ({schema, method, url, httpPart }) => {
         return data => schema.validate(data)
-    },
+    }
 }
 
 const deleteOptions = {
