@@ -11,13 +11,6 @@ gameInputProperties = {
     releaseDate:{type: 'string', format: 'date'}
 };
 
-//request body schema
-const requestBodySchema = {
-    type: 'object',
-    required: ['name', 'genre', 'developerName', 'publisherName', 'gameEngine', 'platform', 'releaseDate'],
-    properties: gameInputProperties
-}
-
 const signupBodySchema = {
     type: 'object',
     properties: {
@@ -65,7 +58,7 @@ const getRequestSchema = {
     }
 }
 const postRequestSchema = {
-    body: requestBodySchema,
+    body: Joi.object().keys(requestBodyJoiSchema).required(),
     response: {
         200: {
             type: 'object',
@@ -126,7 +119,7 @@ const signupSchema = {
             properties: { 
                 _id: { type: 'string'},
                 name:{ type: 'string'},
-                email: { type: 'string'}
+                email: { type: 'string', format: 'email'}
             }
         }
     }
@@ -161,12 +154,13 @@ const getMeSchema = {
     }
 }
 
+// /api/games
 exports.getRequestSchema = getRequestSchema;
 exports.postRequestSchema = postRequestSchema;
 exports.putRequestSchema = putRequestSchema;
 exports.patchRequestSchema = patchRequestSchema;
 exports.deleteRequestSchema = deleteRequestSchema;
-
+// / api/users
 exports.signupSchema = signupSchema;
 exports.getUsersSchema = getUsersSchema;
 exports.getMeSchema = getMeSchema;

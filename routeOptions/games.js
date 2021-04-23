@@ -5,22 +5,14 @@ const getOptions = {
     schema: getRequestSchema,
     validatorCompiler: ({schema, method, url, httpPart }) => {
         return data => schema.validate(data)
-    },
-    response: {
-        200: {
-            type: 'object',
-            properties: {
-                _id: { type: 'string'},
-                isAdmin: { type: 'boolean'},
-                name:{ type: 'string'},
-                email: { type: 'string'}
-            }
-        }
     }
 }
 
 const postOptions = {
-    schema: postRequestSchema
+    schema: postRequestSchema,
+    validatorCompiler: ({schema, method, url, httpPart }) => {
+        return data => schema.validate(data)
+    }
 }
 
 const putOptions = {

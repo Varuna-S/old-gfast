@@ -11,11 +11,11 @@ const fastify = require('fastify')({
 fastify.register(helmet);
 fastify.register(decorators);
 fastify.register(fastifyAuth);
-fastify.register(require('./plugins/startup/dbConnector'));
-fastify.register(require('./plugins/routes/homePage'));
-fastify.register(require('./plugins/routes/games'), { prefix: '/api/games'});
-fastify.register(require('./plugins/routes/users'), { prefix: '/api/users'});
-fastify.register(require('./plugins/routes/authn'), { prefix: '/api/authn'});
+fastify.register(require('./plugins/dbConnector'));
+fastify.register(require('./routes/homePage'));
+fastify.register(require('./routes/games'), { prefix: '/api/games'});
+fastify.register(require('./routes/users'), { prefix: '/api/users'});
+fastify.register(require('./routes/authn'), { prefix: '/api/authn'});
 
 
 

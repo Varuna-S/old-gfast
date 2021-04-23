@@ -48,7 +48,7 @@ module.exports = fastifyPlugin( function (fastify, options, next) {
       }
     }
     //function to request the OPA api endpoints  
-    async function eval(){
+    async function evaluate(){
         try {
           response = await tiny.post(options);          
         }
@@ -59,7 +59,7 @@ module.exports = fastifyPlugin( function (fastify, options, next) {
           done(new Error("No response from policy agent, policy might not have been loaded"));
         result = response.body.result.allow;
     }
-    await eval();
+    await evaluate();
     if(!result)
       return reply.status(403).send({message:"Unauthorized Request - Forbidden"});
   });
